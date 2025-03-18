@@ -1,0 +1,21 @@
+﻿@page "/counter"
+
+
+<PageTitle>Counter</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText>
+
+<MudText Class="mb-4">Current count: @currentCount</MudText>
+<MudText Class="mb-4">This is a simple example of a Blazor component.</MudText>
+<MudText Class="mb-4">Click the button to increment the counter.</MudText>
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Click me</MudButton>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

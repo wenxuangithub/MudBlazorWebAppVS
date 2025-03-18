@@ -1,0 +1,73 @@
+﻿@page "/chat"
+
+<h3>Chat</h3>
+
+<MudContainer Style="height: 90vh; display: flex; flex-direction: column;">
+    <!-- Chat Messages -->
+    <MudPaper Elevation="4" Class="pa-4" Style="flex-grow: 1; overflow-y: auto;">
+        @foreach (var messageGroup in messages)
+        {
+            <MudChat ChatPosition="@messageGroup.Position">
+                @foreach (var bubble in messageGroup.Bubbles)
+                {
+                    <MudChatBubble>
+                        @bubble
+                    </MudChatBubble>
+                }
+            </MudChat>
+        }
+    </MudPaper>
+
+    <!-- Input Field, Sticks to Bottom -->
+    <MudPaper Elevation="2" Class="pa-2" Style="position: sticky; bottom: 0;">
+        <MudTextField Label="Type a message..." @bind-Value="userInput"
+                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send"
+                      OnAdornmentClick="SendMessage" FullWidth="true" />
+    </MudPaper>
+</MudContainer>
+
+
+
+@code {
+    private string userInput;
+    private List<ChatMessageGroup> messages = new();
+
+    private void SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(userInput))
+        {
+            messages.Add(new ChatMessageGroup
+                {
+                    Position = MudBlazor.ChatBubblePosition.End, // User message (right-aligned)
+                    Bubbles = new List<string> { userInput }
+                });
+
+            // Simulate bot reply
+            var botReply = GetBotReply(userInput);
+            messages.Add(new ChatMessageGroup
+                {
+                    Position = MudBlazor.ChatBubblePosition.Start, // Bot message (left-aligned)
+                    Bubbles = botReply
+                });
+
+            userInput = string.Empty;
+        }
+    }
+
+    private List<string> GetBotReply(string userMessage)
+    {
+        return userMessage.ToLower() switch
+        {
+            "hello" => new List<string> { "Hello there!", "General Kenobi!" },
+            "who are you?" => new List<string> { "I'm an AI assistant!" },
+            _ => new List<string> { "I have the high ground!" }
+        };
+    }
+
+    public class ChatMessageGroup
+    {
+        public MudBlazor.ChatBubblePosition Position { get; set; }
+        public List<string> Bubbles { get; set; }
+    }
+}
+
